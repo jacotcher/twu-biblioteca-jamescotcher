@@ -2,10 +2,7 @@ public class Book {
     String name;
     String author;
     int year;
-
-    public Book(String name) {
-        this.name = name;
-    }
+    Boolean checkedOut = false;
 
     public Book(String name, String author, int year) {
         this.name = name;
@@ -23,5 +20,15 @@ public class Book {
 
     public int getYear() {
         return year;
+    }
+
+    public boolean checkout() {
+        if(!this.checkedOut) {
+            this.checkedOut = true;
+            return true;
+        } else {
+            return false;
+        }
+
     }
 }

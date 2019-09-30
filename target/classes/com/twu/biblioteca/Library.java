@@ -1,9 +1,12 @@
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Set;
 
 
 public class Library {
 
     private ArrayList<Book> books;
+
 
     public Library() {
         this.books = new ArrayList<Book>();
@@ -26,7 +29,9 @@ public class Library {
             System.out.println();
         }
 
-
     }
 
+    public ArrayList<Book> getBooks() {
+        return books;
+    }
 }
