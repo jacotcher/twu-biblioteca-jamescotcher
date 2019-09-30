@@ -4,16 +4,10 @@ import org.junit.Test;
 import org.junit.contrib.java.lang.system.SystemOutRule;
 import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 import org.mockito.Mock;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 public class ExampleTest {
@@ -89,6 +83,10 @@ public class ExampleTest {
     }
 
 
+/**
+ * These tests originally worked, although after changing the workings of the system, I no longer can figure out how to test this because multiple user-inputs are required to test this.
+ */
+
 //    @Test
 //    public void userNotifiedWhenWrongChoiceSelected() {
 ////        Given
@@ -127,58 +125,78 @@ public class ExampleTest {
 //        Given
         Library library = new Library();
         Menu menu = new Menu(library);
+//        When
         menu.setMenuState("Home");
         ArrayList<String> validOptions = menu.getMenuOptions();
+//        Then
         exit.expectSystemExit();
         menu.makeChoice("9");
     }
 
     @Test
     public void userCanSelectBookCheckoutMenu() {
+//        Given
         Library library = new Library();
         Menu menu = new Menu(library);
+//        When
         menu.setMenuState("Booklist");
         ArrayList<String> validOptions = menu.getMenuOptions();
+//        Then
         assertThat(systemOutRule.getLog(), containsString("Checkout a book"));
     }
 
     @Test
     public void userCanSeeListOfBooksWhenCheckingOut() {
+//        Given
         Library library = new Library();
         Menu menu = new Menu(library);
+//        When
         menu.setMenuState("Checkout");
         ArrayList<String> validOptions = menu.getMenuOptions();
+//        Then
         assertThat(systemOutRule.getLog(), containsString("James Bond|Ian Fleming"));
     }
 
     @Test
     public void userCanCheckoutBook() {
+//        Given
         Library library = new Library();
+//        When
         library.getBooks().get(0).checkout();
+//        Then
         assertThat(systemOutRule.getLog(), containsString("Thank you! Enjoy the book"));
     }
 
     @Test
     public void userCantCheckoutABookAlreadyTaken() {
+//        Given
         Library library = new Library();
+//        When
         library.getBooks().get(0).checkout();
         library.getBooks().get(0).checkout();
+//        Then
         assertThat(systemOutRule.getLog(), containsString("Sorry, that book is not available"));
     }
 
     @Test
     public void userCanReturnABook() {
+//        Given
         Library library = new Library();
+//        When
         library.getBooks().get(0).checkout();
         library.getBooks().get(0).returnBook();
+//        Then
         assertThat(systemOutRule.getLog(), containsString("Thank you for returning the book"));
 
     }
 
     @Test
     public void userCantReturnABookThatTheyDontHave() {
+//        Given
         Library library = new Library();
+//        When
         library.getBooks().get(0).returnBook();
+//        Then
         assertThat(systemOutRule.getLog(), containsString("That is not a valid book to return."));
 
     }

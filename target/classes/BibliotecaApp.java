@@ -1,12 +1,19 @@
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.Scanner;
-import java.util.Set;
 
+/**
+ * The BibliotecaApp class contains the main class for the Biblioteca App.
+ * @author James Cotcher 2019
+ *
+ */
 public class BibliotecaApp {
 
+    /**
+     * The main class is run in order to start the system.
+     * @param args
+     */
     public static void main(String[] args) {
-
+//        Required tools/objects are initiated
         Library library = new Library();
         Menu menu = new Menu(library);
         library.init();
@@ -14,12 +21,12 @@ public class BibliotecaApp {
         String input;
         boolean systemActive = true;
 
+//        A while loop keeps the system running until the user selects "Exit" from the menu
         do {
             ArrayList<String> validOptions = menu.getMenuOptions();
             input = in.nextLine();
             input = menu.checkInput(input, validOptions);
             menu.makeChoice(input);
-
             systemActive = menu.getSystemActive();
         } while(systemActive);
 
