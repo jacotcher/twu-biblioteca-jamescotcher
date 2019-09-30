@@ -22,13 +22,29 @@ public class Book {
         return year;
     }
 
-    public boolean checkout() {
+    public void checkout() {
         if(!this.checkedOut) {
             this.checkedOut = true;
-            return true;
+            System.out.println("Thank you! Enjoy the book");
         } else {
-            return false;
+            System.out.println("Sorry, that book is not available");
         }
 
+    }
+
+    public void returnBook() {
+        if(this.checkedOut) {
+            this.checkedOut = false;
+            System.out.println("Thank you for returning the book");
+
+        } else {
+            System.out.println("That is not a valid book to return.");
+
+        }
+
+    }
+
+    public Boolean getCheckedOut() {
+        return checkedOut;
     }
 }

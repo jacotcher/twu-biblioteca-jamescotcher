@@ -154,22 +154,33 @@ public class ExampleTest {
     @Test
     public void userCanCheckoutBook() {
         Library library = new Library();
-        Menu menu = new Menu(library);
-        menu.setMenuState("Checkout");
-        ArrayList<String> validOptions = menu.getMenuOptions();
-        menu.makeChoice("a");
+        library.getBooks().get(0).checkout();
         assertThat(systemOutRule.getLog(), containsString("Thank you! Enjoy the book"));
     }
 
     @Test
     public void userCantCheckoutABookAlreadyTaken() {
         Library library = new Library();
-        Menu menu = new Menu(library);
-        menu.setMenuState("Checkout");
-        ArrayList<String> validOptions = menu.getMenuOptions();
         library.getBooks().get(0).checkout();
-        menu.makeChoice("a");
+        library.getBooks().get(0).checkout();
         assertThat(systemOutRule.getLog(), containsString("Sorry, that book is not available"));
+    }
+
+    @Test
+    public void userCanReturnABook() {
+        Library library = new Library();
+        library.getBooks().get(0).checkout();
+        library.getBooks().get(0).returnBook();
+        assertThat(systemOutRule.getLog(), containsString("Thank you for returning the book"));
+
+    }
+
+    @Test
+    public void userCantReturnABookThatTheyDontHave() {
+        Library library = new Library();
+        library.getBooks().get(0).returnBook();
+        assertThat(systemOutRule.getLog(), containsString("That is not a valid book to return."));
+
     }
 
 

@@ -1,6 +1,11 @@
 import java.util.*;
 import java.util.regex.*;
 
+/**
+ * Menu is the class that handles all user interaction with the books and library.
+ * It contains all methods for user interaction and displaying results/menus.
+ *
+ */
 public class Menu {
     private String menuState = "Home";
     private Library library;
@@ -15,59 +20,20 @@ public class Menu {
         return menuState;
     }
 
-    public void makeChoice(String input) {
-        switch(input) {
-
-            case "9":
-                System.out.println("System exiting...");
-                this.systemActive = false;
-                System.exit(1);
-                break;
-            case "2":
-                if(this.menuState.equals("Home")) {
-                    library.showBooks();
-                    setMenuState("Booklist");
-                }else if(this.menuState.equals("Booklist")) {
-                    setMenuState("Checkout");
-                }
-                break;
-            case "1":
-                if(this.menuState.equals("Home")) {
-                    setMenuState("Home");
-                }else if(this.menuState.equals("Booklist")) {
-                    setMenuState("Home");
-                } else if(this.menuState.equals("Checkout")) {
-                    setMenuState("Booklist");
-                }
-                break;
-            case "8":
-                setMenuState("Home");
-                break;
-            default:
-                ArrayList<Book> books = library.getBooks();
-                Book book = books.get((input.charAt(0) - 97));
-                if(book.checkout()) {
-                    System.out.println("Thank you! Enjoy the book");
-                }
-                else {
-                    System.out.println("Sorry, that book is not available");
-                }
-                break;
-        }
-
-
-    }
 
     public ArrayList<String> getMenuOptions() {
 
         String menuState = this.getMenuState();
         Hashtable<String, String> menuOptions = new Hashtable<String, String>();
+        ArrayList<Book> books = library.getBooks();
+        int numberOfBooks = books.size();
 
 
         switch(menuState) {
             case "Home":
                 menuOptions.put("1", "Back");
                 menuOptions.put("2", "List all books");
+                menuOptions.put("3", "Return a book");
                 break;
             case "Booklist":
                 menuOptions.put("2", "Checkout a book");
@@ -76,13 +42,23 @@ public class Menu {
 
                 break;
             case "Checkout":
-                ArrayList<Book> books = library.getBooks();
-                int numberOfBooks = books.size();
                 for(int i = 0; i< numberOfBooks; i++) {
-                    menuOptions.put((String.valueOf((char) (i+97))), books.get(i).getName() +"|" + books.get(i).getAuthor() +"|" + books.get(i).getYear());
+                    if(!books.get(i).getCheckedOut()) {
+                        menuOptions.put((String.valueOf((char) (i+97))), books.get(i).getName() +"|" + books.get(i).getAuthor() +"|" + books.get(i).getYear());
+                    }
                 }
                 menuOptions.put("1", "Back");
                 menuOptions.put("8", "Home");
+                break;
+            case "Return":
+                for(int i = 0; i< numberOfBooks; i++) {
+                    if(books.get(i).getCheckedOut()) {
+                    menuOptions.put((String.valueOf((char) (i+97))), books.get(i).getName() +"|" + books.get(i).getAuthor() +"|" + books.get(i).getYear());
+                    }
+                }
+                menuOptions.put("1", "Back");
+                menuOptions.put("8", "Home");
+                break;
 
 
         }
@@ -94,6 +70,63 @@ public class Menu {
 
         return keys;
     }
+
+    public void makeChoice(String input) {
+        switch(input) {
+
+            case "1":
+                if(this.menuState.equals("Home")) {
+                    setMenuState("Home");
+                }else if(this.menuState.equals("Booklist")) {
+                    setMenuState("Home");
+                } else if(this.menuState.equals("Checkout")) {
+                    setMenuState("Booklist");
+                } else if(this.menuState.equals("Return")) {
+                    setMenuState("Home");
+                }
+                break;
+
+            case "2":
+                if(this.menuState.equals("Home")) {
+                    library.showBooks();
+                    setMenuState("Booklist");
+                }else if(this.menuState.equals("Booklist")) {
+                    setMenuState("Checkout");
+                }
+                break;
+
+            case "3":
+                if(this.menuState.equals("Home")) {
+                   setMenuState("Return");
+                }
+                break;
+
+            case "8":
+                setMenuState("Home");
+                break;
+
+            case "9":
+                System.out.println("System exiting...");
+                this.systemActive = false;
+                System.exit(1);
+                break;
+
+            default:
+                if(this.menuState.equals("Checkout")) {
+                    ArrayList<Book> books = library.getBooks();
+                    Book book = books.get((input.charAt(0) - 97));
+                    book.checkout();
+                } else if(this.menuState.equals("Return")) {
+                    ArrayList<Book> books = library.getBooks();
+                    Book book = books.get((input.charAt(0) - 97));
+                    book.returnBook();
+                }
+                break;
+        }
+    }
+
+
+
 
     public void setMenuState(String menuState) {
         this.menuState = menuState;
