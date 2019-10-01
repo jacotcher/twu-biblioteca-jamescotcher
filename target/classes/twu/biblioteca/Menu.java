@@ -49,6 +49,7 @@ public class Menu {
                 menuOptions.put("1", "Back");
                 menuOptions.put("2", "List all books");
                 menuOptions.put("3", "Return a book");
+                menuOptions.put("4", "List all movies");
                 break;
             case "Booklist":
                 menuOptions.put("2", "Checkout a book");
@@ -73,6 +74,8 @@ public class Menu {
                 menuOptions.put("1", "Back");
                 menuOptions.put("8", "Home");
                 break;
+//            case "Movielist":
+                
         }
         menuOptions.put("9", "Quit");
 
@@ -122,6 +125,11 @@ public class Menu {
                    setMenuState("Return");
                 }
                 break;
+
+            case "4":
+                if(this.menuState.equals("Home")) {
+                    setMenuState("Movielist");
+                }
 
             case "8":
                 setMenuState("Home");

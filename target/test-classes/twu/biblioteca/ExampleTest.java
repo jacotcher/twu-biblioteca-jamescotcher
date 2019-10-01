@@ -66,7 +66,7 @@ public class ExampleTest {
     }
 
     @Test
-    public void selection1FromHomeMenuShowsBooks() {
+    public void selection2FromHomeMenuShowsBooks() {
 //        Given
         Library library = new Library();
         Menu menu = new Menu(library);
@@ -127,7 +127,7 @@ public class ExampleTest {
         Menu menu = new Menu(library);
 //        When
         menu.setMenuState("Home");
-        ArrayList<String> validOptions = menu.getMenuOptions();
+        menu.getMenuOptions();
 //        Then
         exit.expectSystemExit();
         menu.makeChoice("9");
@@ -140,7 +140,7 @@ public class ExampleTest {
         Menu menu = new Menu(library);
 //        When
         menu.setMenuState("Booklist");
-        ArrayList<String> validOptions = menu.getMenuOptions();
+        menu.getMenuOptions();
 //        Then
         assertThat(systemOutRule.getLog(), containsString("Checkout a book"));
     }
@@ -152,7 +152,7 @@ public class ExampleTest {
         Menu menu = new Menu(library);
 //        When
         menu.setMenuState("Checkout");
-        ArrayList<String> validOptions = menu.getMenuOptions();
+        menu.getMenuOptions();
 //        Then
         assertThat(systemOutRule.getLog(), containsString("James Bond|Ian Fleming"));
     }
@@ -198,6 +198,20 @@ public class ExampleTest {
         library.getBooks().get(0).returnBook();
 //        Then
         assertThat(systemOutRule.getLog(), containsString("That is not a valid book to return."));
+
+    }
+
+
+    @Test
+    public void userCanSeeMenuOptionForViewingMovies() {
+//        Given
+        Library library = new Library();
+        Menu menu = new Menu(library);
+//        When
+        menu.setMenuState("Home");
+        menu.getMenuOptions();
+//        Then
+        assertThat(systemOutRule.getLog(), containsString("List all movies"));
 
     }
 
