@@ -152,7 +152,7 @@ public class ExampleTest {
         Library library = new Library();
         Menu menu = new Menu(library);
 //        When
-        menu.setMenuState("Checkout");
+        menu.setMenuState("CheckoutBook");
         menu.getMenuOptions();
 //        Then
         assertThat(systemOutRule.getLog(), containsString("James Bond|Ian Fleming"));
@@ -185,7 +185,7 @@ public class ExampleTest {
         Library library = new Library();
 //        When
         library.getBooks().get(0).checkout();
-        library.getBooks().get(0).returnBook();
+        library.getBooks().get(0).returnItem();
 //        Then
         assertThat(systemOutRule.getLog(), containsString("Thank you for returning the book"));
 
@@ -196,7 +196,7 @@ public class ExampleTest {
 //        Given
         Library library = new Library();
 //        When
-        library.getBooks().get(0).returnBook();
+        library.getBooks().get(0).returnItem();
 //        Then
         assertThat(systemOutRule.getLog(), containsString("That is not a valid book to return."));
 
@@ -253,7 +253,7 @@ public class ExampleTest {
     }
 
     @Test
-    public void onlyMoviesAreShownWhenViewingMovies() {
+    public void booksAreNotShownWhenViewingMovies() {
         //        Given
         Library library = new Library();
         Menu menu = new Menu(library);
@@ -264,6 +264,98 @@ public class ExampleTest {
         assertThat(systemOutRule.getLog(), not(containsString("Birdsong")));
     }
 
+    @Test
+    public void checkOutAMovieIsAnOptionOnTheMenu() {
+        //        Given
+        Library library = new Library();
+        Menu menu = new Menu(library);
+//        When
+        menu.setMenuState("Movielist");
+        menu.getMenuOptions();
+//        Then
+        assertThat(systemOutRule.getLog(), containsString("Checkout a movie"));
+    }
+
+    @Test
+    public void selectingCheckoutAMovieTakesYouToTheCheckoutMovieMenu() {
+        //        Given
+        Library library = new Library();
+        Menu menu = new Menu(library);
+//        When
+        menu.setMenuState("Movielist");
+        menu.makeChoice("2");
+        menu.getMenuOptions();
+
+//        Then
+        assertThat(systemOutRule.getLog(), containsString("CheckoutMovie"));
+    }
+
+    @Test
+    public void checkoutMovieMenuDisplaysListOfFilms() {
+        //        Given
+        Library library = new Library();
+        Menu menu = new Menu(library);
+//        When
+        menu.setMenuState("CheckoutMovie");
+        menu.getMenuOptions();
+
+//        Then
+        assertThat(systemOutRule.getLog(), containsString("Finding Nemo"));
+    }
+
+    @Test
+    public void movieCanBeCheckedOut() {
+        //        Given
+        Library library = new Library();
+        Menu menu = new Menu(library);
+//        When
+        menu.setMenuState("CheckoutMovie");
+        menu.getMenuOptions();
+        menu.makeChoice("a");
+
+//        Then
+        assertThat(systemOutRule.getLog(), containsString("Thank you! Enjoy the movie"));
+    }
+
+    @Test
+    public void aCheckedOutMovieAppearsOnTheReturnsList() {
+//        Given
+        Library library = new Library();
+        Menu menu = new Menu(library);
+        library.getMovies().get(0).checkout();
+//        When
+        menu.setMenuState("Return");
+        menu.getMenuOptions();
+//        Then
+        assertThat(systemOutRule.getLog(), containsString("Finding Nemo"));
+    }
+
+    @Test
+    public void aCheckedOutMovieDoesNotAppearOnTheMovieList() {
+//        Given
+        Library library = new Library();
+        Menu menu = new Menu(library);
+        library.getMovies().get(0).checkout();
+//        When
+        menu.setMenuState("Movielist");
+        menu.getMenuOptions();
+//        Then
+        assertThat(systemOutRule.getLog(), not(containsString("Finding Nemo")));
+    }
+
+    @Test
+    public void aBookCanBeReturned() {
+//        Given
+        Library library = new Library();
+        Menu menu = new Menu(library);
+        library.getMovies().get(0).checkout();
+//        When
+        menu.setMenuState("Return");
+        menu.makeChoice("a");
+        menu.getMenuOptions();
+        assertThat(systemOutRule.getLog(), not(containsString("Finding Nemo")));
+        assertThat(systemOutRule.getLog(), containsString("Thank you for returning the movie"));
+    }
 
 
 

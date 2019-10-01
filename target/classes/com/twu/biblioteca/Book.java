@@ -29,7 +29,7 @@ public class Book extends LibraryItem implements Checkoutable {
     }
 
 
-    public void returnBook() {
+    public void returnItem() {
         if(this.checkedOut) {
             this.checkedOut = false;
             System.out.println("Thank you for returning the book");

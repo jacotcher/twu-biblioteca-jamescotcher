@@ -26,6 +26,7 @@ public class BibliotecaApp {
 
 
             ArrayList<String> validOptions = menu.getMenuOptions();
+            System.out.print(">");
             input = in.nextLine();
             input = menu.checkInput(input, validOptions);
             System.out.println("__________________________");

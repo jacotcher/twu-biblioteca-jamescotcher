@@ -90,4 +90,31 @@ public class Library {
     public ArrayList<Book> getBooks() {
         return this.books;
     }
+
+    public ArrayList<Movie> getMovies() {
+        return this.movies;
+    }
+
+    public ArrayList<LibraryItem> getLibraryItems() {
+        return libraryItems;
+    }
+
+    public ArrayList<LibraryItem> getCheckedOutItems() {
+        ArrayList<LibraryItem> checkedOut = new ArrayList<LibraryItem>();
+        for(int i = 0; i< libraryItems.size(); i++) {
+            if(Book.class.isInstance(libraryItems.get(i))) {
+                Book book = (Book) libraryItems.get(i);
+                if(book.getCheckedOut()) {
+                    checkedOut.add(book);
+                }
+            }
+            else if(Movie.class.isInstance(libraryItems.get(i))) {
+                Movie movie = (Movie) libraryItems.get(i);
+                if(movie.getCheckedOut()) {
+                    checkedOut.add(movie);
+                }
+            }
+        }
+        return checkedOut;
+    }
 }

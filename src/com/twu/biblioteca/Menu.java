@@ -42,28 +42,45 @@ public class Menu {
 //        These are used later to print returnable/checkoutable books
         ArrayList<Book> books = this.library.getBooks();
         int numberOfBooks = books.size();
+        ArrayList<Movie> movies = this.library.getMovies();
+        int numberOfMovies = movies.size();
+        ArrayList<LibraryItem> libraryItems = this.library.getLibraryItems();
+        int numberOfLibraryItems = libraryItems.size();
 
 //        This casts the user options to keys for the system to process
         switch(menuState) {
             case "Home":
                 menuOptions.put("2", "List all books");
-                menuOptions.put("3", "Return a book");
+                menuOptions.put("3", "Return items");
                 menuOptions.put("4", "List all movies");
                 break;
             case "Booklist":
                 menuOptions.put("2", "Checkout a book");
                 break;
-            case "Checkout":
+            case "CheckoutBook":
                 for(int i = 0; i< numberOfBooks; i++) {
                     if(!books.get(i).getCheckedOut()) {
                         menuOptions.put((String.valueOf((char) (i+97))), books.get(i).getName() +"|" + books.get(i).getAuthor() +"|" + books.get(i).getYear());
                     }
                 }
                 break;
+            case "CheckoutMovie":
+                for(int i = 0; i< numberOfMovies; i++) {
+                    if(!movies.get(i).getCheckedOut()) {
+                        menuOptions.put((String.valueOf((char) (i+97))), movies.get(i).getName() +"|" + movies.get(i).getDirector() +"|" + movies.get(i).getYear());
+                    }
+                }
+                break;
             case "Return":
-                for(int i = 0; i< numberOfBooks; i++) {
-                    if(books.get(i).getCheckedOut()) {
-                    menuOptions.put((String.valueOf((char) (i+97))), books.get(i).getName() +"|" + books.get(i).getAuthor() +"|" + books.get(i).getYear());
+                ArrayList<LibraryItem> checkedOut = library.getCheckedOutItems();
+                for(int i = 0; i < checkedOut.size(); i++) {
+                    if(Book.class.isInstance(checkedOut.get(i))) {
+                        Book book = (Book) checkedOut.get(i);
+                        menuOptions.put((String.valueOf((char) (i + 97))), "BOOK: " + book.getName() + "|" + book.getAuthor() + "|" + book.getYear());
+                    }
+                    else if(Movie.class.isInstance(checkedOut.get(i))) {
+                        Movie movie = (Movie) checkedOut.get(i);
+                        menuOptions.put((String.valueOf((char) (i + 97))), "MOVIE: " + movie.getName() + "|" + movie.getDirector() + "|" + movie.getYear());
                     }
                 }
 
@@ -104,7 +121,7 @@ public class Menu {
                     setMenuState("Home");
                 }else if(this.menuState.equals("Booklist")) {
                     setMenuState("Home");
-                } else if(this.menuState.equals("Checkout")) {
+                } else if(this.menuState.equals("CheckoutBook")) {
                     setMenuState("Booklist");
                 } else if(this.menuState.equals("Return")) {
                     setMenuState("Home");
@@ -116,7 +133,9 @@ public class Menu {
                     library.showBooks();
                     setMenuState("Booklist");
                 }else if(this.menuState.equals("Booklist")) {
-                    setMenuState("Checkout");
+                    setMenuState("CheckoutBook");
+                }else if(this.menuState.equals("Movielist")) {
+                    setMenuState("CheckoutMovie");
                 }
                 break;
 
@@ -147,14 +166,23 @@ public class Menu {
 //          It is currently only used to display books when the checkout or return menu is selected.
 //          The book selection interface is prefaced by letters instead of numbers, which is why the (input.charAt(0) - 97 exists. It starts at a and goes to b, c etc
             default:
-                if(this.menuState.equals("Checkout")) {
+                if(this.menuState.equals("CheckoutBook")) {
                     ArrayList<Book> books = library.getBooks();
                     Book book = books.get((input.charAt(0) - 97));
                     book.checkout();
+                } else if(this.menuState.equals("CheckoutMovie")) {
+                    ArrayList<Movie> movies = library.getMovies();
+                    Movie movie = movies.get((input.charAt(0) - 97));
+                    movie.checkout();
                 } else if(this.menuState.equals("Return")) {
-                    ArrayList<Book> books = library.getBooks();
-                    Book book = books.get((input.charAt(0) - 97));
-                    book.returnBook();
+                    ArrayList<LibraryItem> checkedOutItems = library.getCheckedOutItems();
+                    if(Book.class.isInstance(checkedOutItems.get((input.charAt(0) - 97)))) {
+                        Book book = (Book) checkedOutItems.get((input.charAt(0) - 97));
+                        book.returnItem();
+                    } else if(Movie.class.isInstance(checkedOutItems.get((input.charAt(0) - 97)))) {
+                        Movie movie = (Movie) checkedOutItems.get((input.charAt(0) - 97));
+                        movie.returnItem();
+                    }
                 }
                 break;
         }
@@ -163,7 +191,7 @@ public class Menu {
 
     /**
      * Set methods for menuState. Only really used for testing purposes.
-     * @param menuState the state of the menu "Home", "Return", "Checkout" etc...
+     * @param menuState the state of the menu "Home", "Return", "CheckoutBook" etc...
      */
     public void setMenuState(String menuState) {
         this.menuState = menuState;
@@ -245,6 +273,7 @@ public class Menu {
             } else {
                 printMenu();
                 System.out.println("Please select a valid option!");
+                System.out.print(">");
                 input = in.nextLine();
             }
         } while(!validInput);

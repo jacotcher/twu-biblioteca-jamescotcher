@@ -3,7 +3,7 @@ public interface Checkoutable {
     public void checkout();
 
 
-    public void returnBook();
+    public void returnItem();
 
 
     public Boolean getCheckedOut();
