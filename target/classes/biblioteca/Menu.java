@@ -40,21 +40,18 @@ public class Menu {
         Hashtable<String, String> menuOptions = new Hashtable<String, String>();
 
 //        These are used later to print returnable/checkoutable books
-        ArrayList<Book> books = library.getBooks();
+        ArrayList<Book> books = this.library.getBooks();
         int numberOfBooks = books.size();
 
 //        This casts the user options to keys for the system to process
         switch(menuState) {
             case "Home":
-                menuOptions.put("1", "Back");
                 menuOptions.put("2", "List all books");
                 menuOptions.put("3", "Return a book");
                 menuOptions.put("4", "List all movies");
                 break;
             case "Booklist":
                 menuOptions.put("2", "Checkout a book");
-                menuOptions.put("1", "Back");
-                menuOptions.put("8", "Home");
                 break;
             case "Checkout":
                 for(int i = 0; i< numberOfBooks; i++) {
@@ -62,8 +59,6 @@ public class Menu {
                         menuOptions.put((String.valueOf((char) (i+97))), books.get(i).getName() +"|" + books.get(i).getAuthor() +"|" + books.get(i).getYear());
                     }
                 }
-                menuOptions.put("1", "Back");
-                menuOptions.put("8", "Home");
                 break;
             case "Return":
                 for(int i = 0; i< numberOfBooks; i++) {
@@ -71,11 +66,16 @@ public class Menu {
                     menuOptions.put((String.valueOf((char) (i+97))), books.get(i).getName() +"|" + books.get(i).getAuthor() +"|" + books.get(i).getYear());
                     }
                 }
-                menuOptions.put("1", "Back");
-                menuOptions.put("8", "Home");
+
                 break;
-//            case "Movielist":
-                
+            case "Movielist":
+                menuOptions.put("2", "Checkout a movie");
+                break;
+
+        }
+        if(!menuState.equals("Home")) {
+            menuOptions.put("1", "Back");
+            menuOptions.put("8", "Home");
         }
         menuOptions.put("9", "Quit");
 
@@ -128,8 +128,10 @@ public class Menu {
 
             case "4":
                 if(this.menuState.equals("Home")) {
+                    library.showMovies();
                     setMenuState("Movielist");
                 }
+                break;
 
             case "8":
                 setMenuState("Home");
@@ -196,13 +198,16 @@ public class Menu {
      * @param menuOptions the pre-calculated options that the user can choose from.
      */
     private void printMenu(Hashtable<String, String> menuOptions) {
-        System.out.println("Biblioteca Menu");
+        System.out.println("_ _ _ _ _ _ _ _ _ _ _ _ _ ");
+        System.out.println("Biblioteca Menu -> " + menuState);
         ArrayList<String> keys = new ArrayList<String>(menuOptions.keySet());
         Collections.sort(keys);
         for(String key: keys){
             System.out.println(key+". "+menuOptions.get(key));
         }
-        System.out.println("____________________________________");
+        System.out.println("__________________________");
+        System.out.println("_ _ _ _ _ _ _ _ _ _ _ _ _ ");
+        System.out.println("__________________________");
     }
 
     /**
@@ -210,14 +215,17 @@ public class Menu {
      * It was included so that the menu could be re-printed if it needed to be.
      */
     public void printMenu() {
-        System.out.println("Biblioteca Menu");
+        System.out.println("_ _ _ _ _ _ _ _ _ _ _ _ _ ");
+        System.out.println("Biblioteca Menu -> " + menuState);
         Hashtable<String, String> menuOptions = getLastMenuOptions();
         ArrayList<String> keys = new ArrayList<String>(menuOptions.keySet());
         Collections.sort(keys);
         for(String key: keys){
             System.out.println(key+". "+menuOptions.get(key));
         }
-        System.out.println("____________________________________");
+        System.out.println("__________________________");
+        System.out.println("_ _ _ _ _ _ _ _ _ _ _ _ _ ");
+        System.out.println("__________________________");
 
     }
 

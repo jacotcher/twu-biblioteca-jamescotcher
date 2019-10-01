@@ -10,18 +10,27 @@ public class Library {
     /**
      * The variable 'books' stores an ArrayList of all the current books held by the library.
      */
-    private ArrayList<Book> books;
+    private ArrayList<LibraryItem> libraryItems = new ArrayList<LibraryItem>();
+    private ArrayList<Book> books = new ArrayList<Book>();
+    private ArrayList<Movie> movies = new ArrayList<Movie>();
 
     /**
      * The constructor method. Currently the 5 books are manually added as per the user stories
      */
     public Library() {
-        this.books = new ArrayList<Book>();
-        books.add(new Book("James Bond", "Ian Fleming", 1953));
-        books.add(new Book("Harry Potter", "J.K. Rowling", 1997));
-        books.add(new Book("Lord of the Rings", "J.R.R. Tolkien", 1954));
-        books.add(new Book("To Kill a Mockingbird", "Harper Lee", 1960));
-        books.add(new Book("Birdsong", "Sebastian Faulks", 1993));
+        libraryItems.add(new Book("James Bond", "Ian Fleming", 1953));
+        libraryItems.add(new Book("Harry Potter", "J.K. Rowling", 1997));
+        libraryItems.add(new Book("Lord of the Rings", "J.R.R. Tolkien", 1954));
+        libraryItems.add(new Book("To Kill a Mockingbird", "Harper Lee", 1960));
+        libraryItems.add(new Book("Birdsong", "Sebastian Faulks", 1993));
+
+        libraryItems.add(new Movie("Finding Nemo", "Andrew Stanton", 2003));
+        libraryItems.add(new Movie("The Emperors New Groove", "Mark Dindal", 2001));
+        libraryItems.add(new Movie("The Wailing", "Na Hong-jin", 2016));
+        libraryItems.add(new Movie("The Shawshank Redemption", "Frank Darabont", 1995));
+        libraryItems.add(new Movie("Pulp Fiction", "Quentin Tarantino", 1994));
+        fillBooks();
+        fillMovies();
 
     }
 
@@ -42,6 +51,36 @@ public class Library {
             System.out.println();
         }
 
+
+    }
+
+    public void showMovies() {
+        for (int i = 0; i < this.movies.size(); i++) {
+            Movie current_movie = this.movies.get(i);
+            System.out.print(current_movie.getName() +"|" + current_movie.getDirector() +"|" + current_movie.getYear());
+            System.out.println();
+        }
+
+    }
+
+    private void fillBooks() {
+        for (int i = 0; i < this.libraryItems.size(); i++) {
+            if(Book.class.isInstance(libraryItems.get(i))) {
+                Book book = (Book) libraryItems.get(i);
+                this.books.add(book);
+
+            }
+        }
+    }
+
+    private void fillMovies() {
+        for (int i = 0; i < this.libraryItems.size(); i++) {
+            if(Movie.class.isInstance(libraryItems.get(i))) {
+                Movie movie = (Movie) libraryItems.get(i);
+                this.movies.add(movie);
+
+            }
+        }
     }
 
     /**
@@ -49,6 +88,6 @@ public class Library {
      * @return books The ArrayList of books that the library owns
      */
     public ArrayList<Book> getBooks() {
-        return books;
+        return this.books;
     }
 }

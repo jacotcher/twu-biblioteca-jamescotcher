@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 
 public class ExampleTest {
@@ -214,6 +215,56 @@ public class ExampleTest {
         assertThat(systemOutRule.getLog(), containsString("List all movies"));
 
     }
+
+    @Test
+    public void userCanVisitListMoviesPage() {
+//        Given
+        Library library = new Library();
+        Menu menu = new Menu(library);
+//        When
+        menu.setMenuState("Home");
+        menu.getMenuOptions();
+        menu.makeChoice("4");
+        menu.getMenuOptions();
+//        Then
+        assertThat(systemOutRule.getLog(), containsString("-> Movielist"));
+    }
+
+    @Test
+    public void userCanSeeListOfMovies() {
+//        Given
+        Library library = new Library();
+//        When
+        library.showMovies();
+//        Then
+        assertThat(systemOutRule.getLog(), containsString("Finding Nemo"));
+    }
+
+    @Test
+    public void userCanSelectListAllMoviesToSeeMovies() {
+//        Given
+        Library library = new Library();
+        Menu menu = new Menu(library);
+//        When
+        menu.setMenuState("Home");
+        menu.makeChoice("4");
+//        Then
+        assertThat(systemOutRule.getLog(), containsString("Finding Nemo"));
+    }
+
+    @Test
+    public void onlyMoviesAreShownWhenViewingMovies() {
+        //        Given
+        Library library = new Library();
+        Menu menu = new Menu(library);
+//        When
+        menu.setMenuState("Home");
+        menu.makeChoice("4");
+//        Then
+        assertThat(systemOutRule.getLog(), not(containsString("Birdsong")));
+    }
+
+
 
 
 }
