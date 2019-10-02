@@ -29,9 +29,9 @@ public class BibliotecaApp {
             System.out.print(">");
             input = in.nextLine();
             input = menu.checkInput(input, validOptions);
-            System.out.println("__________________________");
-            System.out.println("_ _ _ _ _ _ _ _ _ _ _ _ _ ");
-            System.out.println("__________________________");
+//            System.out.println("__________________________");
+//            System.out.println("_ _ _ _ _ _ _ _ _ _ _ _ _ ");
+//            System.out.println("__________________________");
             menu.makeChoice(input);
 
             systemActive = menu.getSystemActive();

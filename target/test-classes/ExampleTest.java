@@ -344,7 +344,7 @@ public class ExampleTest {
     }
 
     @Test
-    public void aBookCanBeReturned() {
+    public void aMovieCanBeReturned() {
 //        Given
         Library library = new Library();
         Menu menu = new Menu(library);
@@ -355,6 +355,53 @@ public class ExampleTest {
         menu.getMenuOptions();
         assertThat(systemOutRule.getLog(), not(containsString("Finding Nemo")));
         assertThat(systemOutRule.getLog(), containsString("Thank you for returning the movie"));
+    }
+
+    @Test
+    public void userCanBeDefined() {
+        User user = new User("James Cotcher", "123-1234", "password");
+        assertThat("James Cotcher", is(user.getName()));
+    }
+
+    @Test
+    public void userIsAskedToLogOnWhenSystemStarts() {
+//        Given
+        Library library = new Library();
+        Menu menu = new Menu(library);
+//        When
+        menu.getMenuOptions();
+//        Then
+        assertThat(systemOutRule.getLog(), containsString("Enter your library ID"));
+    }
+
+    @Test
+    public void userToldTheirIdIsWrongIfUserDoesntExist() {
+//        Given
+        Library library = new Library();
+        Menu menu = new Menu(library);
+//        When
+        menu.setMenuState("Login-id");
+        menu.makeChoice("124-1231");
+        menu.getMenuOptions();
+//        Then
+
+        assertThat(systemOutRule.getLog(), containsString("You have entered an ID that is not stored in this system. Please try again."));
+
+    }
+
+    @Test
+    public void userCanProgressToPasswordIfTheyEnterTheCorrectId() {
+//        Given
+        Library library = new Library();
+        Menu menu = new Menu(library);
+//        When
+        menu.setMenuState("Login-id");
+        menu.makeChoice("100-1234");
+        menu.getMenuOptions();
+//        Then
+
+        assertThat(systemOutRule.getLog(), containsString("Login-password"));
+
     }
 
 

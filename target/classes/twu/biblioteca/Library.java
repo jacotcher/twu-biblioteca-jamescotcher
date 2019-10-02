@@ -13,22 +13,15 @@ public class Library {
     private ArrayList<LibraryItem> libraryItems = new ArrayList<LibraryItem>();
     private ArrayList<Book> books = new ArrayList<Book>();
     private ArrayList<Movie> movies = new ArrayList<Movie>();
+    private ArrayList<User> users = new ArrayList<User>();
 
     /**
      * The constructor method. Currently the 5 books are manually added as per the user stories
      */
     public Library() {
-        libraryItems.add(new Book("James Bond", "Ian Fleming", 1953));
-        libraryItems.add(new Book("Harry Potter", "J.K. Rowling", 1997));
-        libraryItems.add(new Book("Lord of the Rings", "J.R.R. Tolkien", 1954));
-        libraryItems.add(new Book("To Kill a Mockingbird", "Harper Lee", 1960));
-        libraryItems.add(new Book("Birdsong", "Sebastian Faulks", 1993));
 
-        libraryItems.add(new Movie("Finding Nemo", "Andrew Stanton", 2003));
-        libraryItems.add(new Movie("The Emperors New Groove", "Mark Dindal", 2001));
-        libraryItems.add(new Movie("The Wailing", "Na Hong-jin", 2016));
-        libraryItems.add(new Movie("The Shawshank Redemption", "Frank Darabont", 1995));
-        libraryItems.add(new Movie("Pulp Fiction", "Quentin Tarantino", 1994));
+        sourceUsers();
+        sourceItems();
         fillBooks();
         fillMovies();
 
@@ -52,6 +45,25 @@ public class Library {
         }
 
 
+    }
+
+    private void sourceItems() {
+        libraryItems.add(new Book("James Bond", "Ian Fleming", 1953));
+        libraryItems.add(new Book("Harry Potter", "J.K. Rowling", 1997));
+        libraryItems.add(new Book("Lord of the Rings", "J.R.R. Tolkien", 1954));
+        libraryItems.add(new Book("To Kill a Mockingbird", "Harper Lee", 1960));
+        libraryItems.add(new Book("Birdsong", "Sebastian Faulks", 1993));
+
+        libraryItems.add(new Movie("Finding Nemo", "Andrew Stanton", 2003));
+        libraryItems.add(new Movie("The Emperors New Groove", "Mark Dindal", 2001));
+        libraryItems.add(new Movie("The Wailing", "Na Hong-jin", 2016));
+        libraryItems.add(new Movie("The Shawshank Redemption", "Frank Darabont", 1995));
+        libraryItems.add(new Movie("Pulp Fiction", "Quentin Tarantino", 1994));
+    }
+    private void sourceUsers() {
+        users.add(new User("James Cotcher", "100-1234", "password"));
+        users.add(new User("Chris Callaghan", "123-1234", "password1"));
+        users.add(new User("Frankie Fowell", "502-1997", "password2"));
     }
 
     public void showMovies() {
@@ -116,5 +128,25 @@ public class Library {
             }
         }
         return checkedOut;
+    }
+
+    public boolean doesUserExist(String id) {
+        boolean userFound = false;
+        for(int i = 0; i < users.size(); i++) {
+            if(users.get(i).getId().equals(id)) {
+                userFound = true;
+            }
+        }
+        return userFound;
+    }
+
+    public User findUserById(String id) {
+        User user = null;
+        for(int i = 0; i < users.size(); i++) {
+            if(users.get(i).getId().equals(id)) {
+                user = users.get(i);
+            }
+        }
+        return user;
     }
 }
