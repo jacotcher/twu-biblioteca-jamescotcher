@@ -1,6 +1,7 @@
 public class Movie extends LibraryItem implements Checkoutable {
     String director;
     Boolean checkedOut = false;
+    User checkedOutBy = null;
     int rating;
 
 
@@ -26,10 +27,11 @@ public class Movie extends LibraryItem implements Checkoutable {
         }
     }
 
-    public void checkout() {
+    public void checkout(User user) {
         if(!this.checkedOut) {
             this.checkedOut = true;
             System.out.println("Thank you! Enjoy the movie");
+            checkedOutBy = user;
         } else {
             System.out.println("Sorry, that movie is not available");
         }
@@ -53,4 +55,8 @@ public class Movie extends LibraryItem implements Checkoutable {
     public Boolean getCheckedOut() {
         return checkedOut;
     }
+    public User getCheckedOutBy() {
+        return checkedOutBy;
+    }
+
 }

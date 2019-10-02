@@ -158,8 +158,9 @@ public class ExampleTest {
     public void userCanCheckoutBook() {
 //        Given
         Library library = new Library();
+        User user = new User("James Cotcher", "100-1234", "password");
 //        When
-        library.getBooks().get(0).checkout();
+        library.getBooks().get(0).checkout(user);
 //        Then
         assertThat(systemOutRule.getLog(), containsString("Thank you! Enjoy the book"));
     }
@@ -168,9 +169,10 @@ public class ExampleTest {
     public void userCantCheckoutABookAlreadyTaken() {
 //        Given
         Library library = new Library();
+        User user = new User("James Cotcher", "100-1234", "password");
 //        When
-        library.getBooks().get(0).checkout();
-        library.getBooks().get(0).checkout();
+        library.getBooks().get(0).checkout(user);
+        library.getBooks().get(0).checkout(user);
 //        Then
         assertThat(systemOutRule.getLog(), containsString("Sorry, that book is not available"));
     }
@@ -179,8 +181,9 @@ public class ExampleTest {
     public void userCanReturnABook() {
 //        Given
         Library library = new Library();
+        User user = new User("James Cotcher", "100-1234", "password");
 //        When
-        library.getBooks().get(0).checkout();
+        library.getBooks().get(0).checkout(user);
         library.getBooks().get(0).returnItem();
 //        Then
         assertThat(systemOutRule.getLog(), containsString("Thank you for returning the book"));
@@ -318,7 +321,9 @@ public class ExampleTest {
 //        Given
         Library library = new Library();
         Menu menu = new Menu(library);
-        library.getMovies().get(0).checkout();
+        User user = new User("James Cotcher", "100-1234", "password");
+        library.getMovies().get(0).checkout(user);
+        menu.setCurrentUser(user);
 //        When
         menu.setMenuState("Return");
         menu.getMenuOptions();
@@ -331,7 +336,8 @@ public class ExampleTest {
 //        Given
         Library library = new Library();
         Menu menu = new Menu(library);
-        library.getMovies().get(0).checkout();
+        User user = new User("James Cotcher", "100-1234", "password");
+        library.getMovies().get(0).checkout(user);
 //        When
         menu.setMenuState("Movielist");
         menu.getMenuOptions();
@@ -344,7 +350,9 @@ public class ExampleTest {
 //        Given
         Library library = new Library();
         Menu menu = new Menu(library);
-        library.getMovies().get(0).checkout();
+        User user = new User("James Cotcher", "100-1234", "password");
+        menu.setCurrentUser(user);
+        library.getMovies().get(0).checkout(user);
 //        When
         menu.setMenuState("Return");
         menu.makeChoice("a");
@@ -453,7 +461,28 @@ public class ExampleTest {
         menu.makeChoice("1");
         menu.getMenuOptions();
         assertThat(systemOutRule.getLog(), containsString("Menu -> Login-id"));
+    }
 
+    @Test public void userCanOnlySeeTheirOwnReturns() {
+//       Given
+        Library library = new Library();
+        Menu menu = new Menu(library);
+//        When
+        menu.setMenuState("Login-id");
+        menu.makeChoice("100-1234");
+        menu.getMenuOptions();
+        menu.makeChoice("password");
+        menu.getMenuOptions();
+        menu.setMenuState("CheckoutBook");
+        menu.makeChoice("a");
+        menu.setMenuState("Return");
+        menu.setMenuState("Login-id");
+        menu.makeChoice("123-1234");
+        menu.makeChoice("password1");
+        menu.makeChoice("3");
+        menu.getMenuOptions();
+        assertThat(true, is(library.getBooks().get(0).checkedOut));
+        assertThat(systemOutRule.getLog(), not(containsString("James Bond")));
 
     }
 

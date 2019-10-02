@@ -131,6 +131,28 @@ public class Library {
         return checkedOut;
     }
 
+    public ArrayList<LibraryItem> getUserCheckedOutItems(User user) {
+
+        ArrayList<LibraryItem> checkedOut = getCheckedOutItems();
+        ArrayList<LibraryItem> userCheckedOut = new ArrayList<LibraryItem>();
+
+        for(int i = 0; i< checkedOut.size(); i++) {
+            if(Book.class.isInstance(checkedOut.get(i))) {
+                Book book = (Book) checkedOut.get(i);
+                if(book.getCheckedOut() && book.getCheckedOutBy().equals(user)) {
+                    userCheckedOut.add(book);
+                }
+            }
+            else if(Movie.class.isInstance(checkedOut.get(i))) {
+                Movie movie = (Movie) checkedOut.get(i);
+                if(movie.getCheckedOut() && movie.getCheckedOutBy().equals(user)) {
+                    userCheckedOut.add(movie);
+                }
+            }
+        }
+        return userCheckedOut;
+    }
+
     public boolean doesUserExist(String id) {
         boolean userFound = false;
         for(int i = 0; i < users.size(); i++) {

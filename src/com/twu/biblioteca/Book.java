@@ -6,6 +6,7 @@ public class Book extends LibraryItem implements Checkoutable {
 
     String author;
     Boolean checkedOut = false;
+    User checkedOutBy = null;
 
 
     public Book(String name, String author, int year) {
@@ -18,10 +19,11 @@ public class Book extends LibraryItem implements Checkoutable {
         return author;
     }
 
-    public void checkout() {
+    public void checkout(User user) {
         if(!this.checkedOut) {
             this.checkedOut = true;
             System.out.println("Thank you! Enjoy the book");
+            checkedOutBy = user;
         } else {
             System.out.println("Sorry, that book is not available");
         }
@@ -46,4 +48,7 @@ public class Book extends LibraryItem implements Checkoutable {
         return checkedOut;
     }
 
+    public User getCheckedOutBy() {
+        return checkedOutBy;
+    }
 }

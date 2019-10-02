@@ -146,7 +146,7 @@ public class Menu {
 
     private Hashtable<String, String> appendReturnOptions(Hashtable<String, String> currentMenuOptions) {
         Hashtable<String, String> menuOptions = currentMenuOptions;
-        ArrayList<LibraryItem> checkedOut = library.getCheckedOutItems();
+        ArrayList<LibraryItem> checkedOut = library.getUserCheckedOutItems(currentUser);
         for(int i = 0; i < checkedOut.size(); i++) {
             if(Book.class.isInstance(checkedOut.get(i))) {
                 Book book = (Book) checkedOut.get(i);
@@ -217,6 +217,8 @@ public class Menu {
                         setMenuState("Home");
                     } else if (this.menuState.equals("CheckoutBook")) {
                         setMenuState("Booklist");
+                    } else if (this.menuState.equals("CheckoutMovie")) {
+                        setMenuState("Movielist");
                     } else if (this.menuState.equals("Return")) {
                         setMenuState("Home");
                     }
@@ -263,13 +265,13 @@ public class Menu {
                     if (this.menuState.equals("CheckoutBook")) {
                         ArrayList<Book> books = library.getBooks();
                         Book book = books.get((input.charAt(0) - 97));
-                        book.checkout();
+                        book.checkout(currentUser);
                     } else if (this.menuState.equals("CheckoutMovie")) {
                         ArrayList<Movie> movies = library.getMovies();
                         Movie movie = movies.get((input.charAt(0) - 97));
-                        movie.checkout();
+                        movie.checkout(currentUser);
                     } else if (this.menuState.equals("Return")) {
-                        ArrayList<LibraryItem> checkedOutItems = library.getCheckedOutItems();
+                        ArrayList<LibraryItem> checkedOutItems = library.getUserCheckedOutItems(currentUser);
                         if (Book.class.isInstance(checkedOutItems.get((input.charAt(0) - 97)))) {
                             Book book = (Book) checkedOutItems.get((input.charAt(0) - 97));
                             book.returnItem();
@@ -378,5 +380,9 @@ public class Menu {
             }
         }
         return input;
+    }
+
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
     }
 }
