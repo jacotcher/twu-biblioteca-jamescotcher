@@ -23,8 +23,6 @@ public class BibliotecaApp {
 
 //        A while loop keeps the system running until the user selects "Exit" from the menu
         do {
-
-
             ArrayList<String> validOptions = menu.getMenuOptions();
             System.out.print(">");
             input = in.nextLine();
@@ -33,21 +31,7 @@ public class BibliotecaApp {
             for (int i = 0; i < 20; ++i) System.out.println();
             System.out.println("__________________________");
             menu.makeChoice(input);
-
             systemActive = menu.getSystemActive();
-
         } while(systemActive);
-
-
-
-
-
-
-
     }
-
-
-
-
-
 }

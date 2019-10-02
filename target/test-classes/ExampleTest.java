@@ -463,7 +463,8 @@ public class ExampleTest {
         assertThat(systemOutRule.getLog(), containsString("Menu -> Login-id"));
     }
 
-    @Test public void userCanOnlySeeTheirOwnReturns() {
+    @Test
+    public void userCanOnlySeeTheirOwnReturns() {
 //       Given
         Library library = new Library();
         Menu menu = new Menu(library);
@@ -485,6 +486,96 @@ public class ExampleTest {
         assertThat(systemOutRule.getLog(), not(containsString("James Bond")));
 
     }
+    @Test
+    public void librarianCanSeeAllReturns() {
+        //       Given
+        Library library = new Library();
+        Menu menu = new Menu(library);
+//        When
+        menu.setMenuState("Login-id");
+        menu.makeChoice("100-1234");
+        menu.getMenuOptions();
+        menu.makeChoice("password");
+        menu.getMenuOptions();
+        menu.setMenuState("CheckoutBook");
+        menu.makeChoice("a");
+        menu.setMenuState("Return");
+        menu.setMenuState("Login-id");
+        menu.makeChoice("123-1234");
+        menu.makeChoice("password1");
+        menu.setMenuState("CheckoutMovie");
+        menu.makeChoice("c");
+        menu.setMenuState("Login-id");
+        menu.makeChoice("999-9999");
+        menu.makeChoice("password");
+        menu.setMenuState("Return");
+        menu.getMenuOptions();
+
+        assertThat(true, is(library.getBooks().get(0).checkedOut));
+        assertThat(systemOutRule.getLog(), containsString("James Bond"));
+        assertThat(systemOutRule.getLog(), containsString("The Wailing"));
+
+    }
+
+    @Test
+    public void userCanSeeViewContactOption() {
+        Library library = new Library();
+        Menu menu = new Menu(library);
+//        When
+        menu.setMenuState("Login-id");
+        menu.makeChoice("100-1234");
+        menu.getMenuOptions();
+        menu.makeChoice("password");
+        menu.getMenuOptions();
+        assertThat(systemOutRule.getLog(), containsString("View my contact information"));
+    }
+
+    @Test
+    public void userCanViewContactMenu() {
+        Library library = new Library();
+        Menu menu = new Menu(library);
+//        When
+        menu.setMenuState("Login-id");
+        menu.makeChoice("100-1234");
+        menu.getMenuOptions();
+        menu.makeChoice("password");
+        menu.makeChoice("5");
+        menu.getMenuOptions();
+        assertThat(systemOutRule.getLog(), containsString("Menu -> ContactInfo"));
+    }
+
+    @Test
+    public void userCanViewTheirOwnContactInfo() {
+        Library library = new Library();
+        Menu menu = new Menu(library);
+//        When
+        menu.setMenuState("Login-id");
+        menu.makeChoice("100-1234");
+        menu.getMenuOptions();
+        menu.makeChoice("password");
+        menu.makeChoice("5");
+        menu.getMenuOptions();
+        assertThat(systemOutRule.getLog(), containsString("James Cotcher"));
+        assertThat(systemOutRule.getLog(), containsString("jamescotcher@email.com"));
+        assertThat(systemOutRule.getLog(), containsString("07514537807"));
+    }
+
+    @Test
+    public void userCantViewOtherPeoplesContactInfo() {
+        Library library = new Library();
+        Menu menu = new Menu(library);
+//        When
+        menu.setMenuState("Login-id");
+        menu.makeChoice("100-1234");
+        menu.getMenuOptions();
+        menu.makeChoice("password");
+        menu.makeChoice("5");
+        menu.getMenuOptions();
+        assertThat(systemOutRule.getLog(), not(containsString("Chris Callaghan")));
+        assertThat(systemOutRule.getLog(), not(containsString("Frankie Fowell")));
+    }
+
+
 
 
 

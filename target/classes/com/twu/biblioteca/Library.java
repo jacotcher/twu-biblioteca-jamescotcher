@@ -7,12 +7,22 @@ import java.util.Set;
  */
 public class Library {
 
+
+    /**
+     * The variable 'libraryitems' stores an ArrayList of all the current libraryitems held by the library.
+     */
+    private ArrayList<LibraryItem> libraryItems = new ArrayList<LibraryItem>();
     /**
      * The variable 'books' stores an ArrayList of all the current books held by the library.
      */
-    private ArrayList<LibraryItem> libraryItems = new ArrayList<LibraryItem>();
     private ArrayList<Book> books = new ArrayList<Book>();
+    /**
+     * The variable 'movies' stores an ArrayList of all the current movie held by the library.
+     */
     private ArrayList<Movie> movies = new ArrayList<Movie>();
+    /**
+     * The variable 'users' stores an ArrayList of all the users that can use the library.
+     */
     private ArrayList<User> users = new ArrayList<User>();
 
     /**
@@ -48,6 +58,9 @@ public class Library {
 
     }
 
+    /**
+     * This method fills the libraryitems arraylist that is used as a DB.
+     */
     private void sourceItems() {
         libraryItems.add(new Book("James Bond", "Ian Fleming", 1953));
         libraryItems.add(new Book("Harry Potter", "J.K. Rowling", 1997));
@@ -61,12 +74,20 @@ public class Library {
         libraryItems.add(new Movie("The Shawshank Redemption", "Frank Darabont", 1995));
         libraryItems.add(new Movie("Pulp Fiction", "Quentin Tarantino", 1994));
     }
+
+    /**
+     * This method fills the users arraylist that is used as a DB.
+     */
     private void sourceUsers() {
-        users.add(new User("James Cotcher", "100-1234", "password"));
-        users.add(new User("Chris Callaghan", "123-1234", "password1"));
-        users.add(new User("Frankie Fowell", "502-1997", "password2"));
+        users.add(new User("James Cotcher", "100-1234", "password", "jamescotcher@email.com", "07514537807"));
+        users.add(new User("Librarian", "999-9999", "password", true));
+        users.add(new User("Chris Callaghan", "123-1234", "password1", "chriscallaghan@email.com", "07591847385"));
+        users.add(new User("Frankie Fowell", "502-1997", "password2", "frankiefowell@email.com", "07491829481"));
     }
 
+    /**
+     * This method prints out a list of all the movies that the library owns, whether checked out or not.
+     */
     public void showMovies() {
         for (int i = 0; i < this.movies.size(); i++) {
             Movie current_movie = this.movies.get(i);
@@ -76,6 +97,9 @@ public class Library {
 
     }
 
+    /**
+     * This method fills the book arraylist that is being used as a DB
+     */
     private void fillBooks() {
         for (int i = 0; i < this.libraryItems.size(); i++) {
             if(Book.class.isInstance(libraryItems.get(i))) {
@@ -86,6 +110,9 @@ public class Library {
         }
     }
 
+    /**
+     * This method fills the movies arraylist that is being used as a DB
+     */
     private void fillMovies() {
         for (int i = 0; i < this.libraryItems.size(); i++) {
             if(Movie.class.isInstance(libraryItems.get(i))) {
@@ -104,14 +131,26 @@ public class Library {
         return this.books;
     }
 
+    /**
+     * The get method for returning the movies that the library owns
+     * @return movies The ArrayList of movies that the library owns
+     */
     public ArrayList<Movie> getMovies() {
         return this.movies;
     }
 
+    /**
+     * The get method for returning the library items that the library owns
+     * @return an arraylist of all library items
+     */
     public ArrayList<LibraryItem> getLibraryItems() {
         return libraryItems;
     }
 
+    /**
+     * The get method for returning the items that have been checked out
+     * @return an arraylist of items that have been checked out by anyone.
+     */
     public ArrayList<LibraryItem> getCheckedOutItems() {
         ArrayList<LibraryItem> checkedOut = new ArrayList<LibraryItem>();
         for(int i = 0; i< libraryItems.size(); i++) {
@@ -131,6 +170,11 @@ public class Library {
         return checkedOut;
     }
 
+    /**
+     * This method returns the items that have been checked out by the current user
+     * @param user The current user of the system
+     * @return An arraylist of items checked out by this user
+     */
     public ArrayList<LibraryItem> getUserCheckedOutItems(User user) {
 
         ArrayList<LibraryItem> checkedOut = getCheckedOutItems();
@@ -153,6 +197,11 @@ public class Library {
         return userCheckedOut;
     }
 
+    /**
+     * This method checks whether or not a user exists in the arraylist being used as a DB.
+     * @param id The ID that is being checked against the 'db'
+     * @return True if the user exists, and false if it doesn't.
+     */
     public boolean doesUserExist(String id) {
         boolean userFound = false;
         for(int i = 0; i < users.size(); i++) {
@@ -163,6 +212,11 @@ public class Library {
         return userFound;
     }
 
+    /**
+     * This method finds a user by ID and returns the user. It is often preceeded by "doesUserExist" to avoid exceptions/null pointers
+     * @param id The ID of a user
+     * @return The User variable referencing a user
+     */
     public User findUserById(String id) {
         User user = null;
         for(int i = 0; i < users.size(); i++) {
