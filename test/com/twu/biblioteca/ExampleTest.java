@@ -27,7 +27,7 @@ public class ExampleTest {
 //        When
         library.init();
 //        Then
-        assertThat("Welcome to Biblioteca. Your one-stop-shop for great book titles in Bangalore!\n", is(systemOutRule.getLog()));
+        assertThat(systemOutRule.getLog(), containsString("Welcome to Biblioteca. Your one-stop-shop for great book titles in Bangalore!"));
     }
 
     @Test
@@ -47,11 +47,7 @@ public class ExampleTest {
 //        When
         library.showBooks();
 //        Then
-        assertThat("James Bond|Ian Fleming|1953\n" +
-                "Harry Potter|J.K. Rowling|1997\n" +
-                "Lord of the Rings|J.R.R. Tolkien|1954\n" +
-                "To Kill a Mockingbird|Harper Lee|1960\n" +
-                "Birdsong|Sebastian Faulks|1993\n", is(systemOutRule.getLog()));
+        assertThat(systemOutRule.getLog(), containsString("James Bond|Ian Fleming|1953"));
     }
 
     @Test
@@ -401,6 +397,66 @@ public class ExampleTest {
 //        Then
         assertThat(systemOutRule.getLog(), containsString("Login-password"));
     }
+
+    @Test public void userIsShownTheirNameSoTheyKnowTheyHaveGotTheirIdCorrect() {
+//        Given
+        Library library = new Library();
+        Menu menu = new Menu(library);
+//        When
+        menu.setMenuState("Login-id");
+        menu.makeChoice("100-1234");
+        menu.getMenuOptions();
+//        Then
+        assertThat(systemOutRule.getLog(), containsString("Hello James Cotcher"));
+    }
+
+    @Test public void ifIncorrectPasswordIsEnteredUserStartsAgain() {
+//        Given
+        Library library = new Library();
+        Menu menu = new Menu(library);
+//        When
+        menu.setMenuState("Login-id");
+        menu.makeChoice("100-1234");
+        menu.getMenuOptions();
+        menu.makeChoice("wrongPassword");
+//        Then
+        assertThat(systemOutRule.getLog(), containsString("Please try logging in again."));
+    }
+
+    @Test public void ifCorrectPasswordUserCanSeeHome() {
+//        Given
+        Library library = new Library();
+        Menu menu = new Menu(library);
+//        When
+        menu.setMenuState("Login-id");
+        menu.makeChoice("100-1234");
+        menu.getMenuOptions();
+        menu.makeChoice("password");
+        menu.getMenuOptions();
+//        Then
+        assertThat(systemOutRule.getLog(), containsString("Menu -> Home"));
+    }
+
+    @Test public void userCanLogOut() {
+//        Given
+        Library library = new Library();
+        Menu menu = new Menu(library);
+//        When
+        menu.setMenuState("Login-id");
+        menu.makeChoice("100-1234");
+        menu.getMenuOptions();
+        menu.makeChoice("password");
+        menu.getMenuOptions();
+//        Then
+        assertThat(systemOutRule.getLog(), containsString("Menu -> Home"));
+//        When again
+        menu.makeChoice("1");
+        menu.getMenuOptions();
+        assertThat(systemOutRule.getLog(), containsString("Menu -> Login-id"));
+
+
+    }
+
 
 
 

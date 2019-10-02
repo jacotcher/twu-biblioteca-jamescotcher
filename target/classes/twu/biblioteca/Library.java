@@ -31,6 +31,7 @@ public class Library {
      * The initialisation of the library. Currently only displays a welcome message
      */
     public void init() {
+        System.out.println("__________________________");
         System.out.println("Welcome to Biblioteca. Your one-stop-shop for great book titles in Bangalore!");
     }
 

@@ -12,6 +12,7 @@ public class Menu {
     private  Boolean systemActive = true;
     private Hashtable<String, String> lastMenuOptions;
     private User currentUser;
+    private String attemptedLogInAs;
 
     /**
      * The constructor class. Required an instance of library
@@ -62,6 +63,9 @@ public class Menu {
                 break;
             case "Login-id":
                 menuOptions.putAll(appendLoginIdOptions(menuOptions));
+                break;
+            case "Login-password":
+                menuOptions.putAll(appendLoginPasswordOptions(menuOptions));
 
         }
 
@@ -80,6 +84,12 @@ public class Menu {
         Hashtable<String, String> menuOptions = currentMenuOptions;
         menuOptions.put("*", "Enter your library ID");
         return menuOptions;
+    }
+
+    private Map<? extends String,? extends String> appendLoginPasswordOptions(Hashtable<String, String> currentMenuOptions) {
+        Hashtable<String, String> menuOptions = currentMenuOptions;
+        menuOptions.put("*", "Enter your password");
+        return menuOptions;
 
     }
 
@@ -88,7 +98,7 @@ public class Menu {
         menuOptions.put("2", "List all books");
         menuOptions.put("3", "Return items");
         menuOptions.put("4", "List all movies");
-        menuOptions.put("1", "Back");
+        menuOptions.put("1", "Logout");
         menuOptions.put("8", "Home");
         menuOptions.put("9", "Quit");
         return menuOptions;
@@ -172,12 +182,27 @@ public class Menu {
      * @param input the validated user input that corresponds to one of the menu options.
      */
     public void makeChoice(String input) {
-        if(menuState.equals("Login-id")) {
-            if(library.doesUserExist(input)) {
-                currentUser = library.findUserById(input);
-                setMenuState("Login-password");
-            } else {
-                System.out.println("You have entered an ID that is not stored in this system. Please try again.");
+        if(menuState.equals("Login-id") || menuState.equals("Login-password")) {
+            switch (menuState) {
+                case "Login-id":
+                    if (library.doesUserExist(input)) {
+                        attemptedLogInAs = input;
+                        setMenuState("Login-password");
+                    } else {
+                        System.out.println("You have entered an ID that is not stored in this system. Please try again.");
+                    }
+                    break;
+                case "Login-password":
+                    User tryingUser = library.findUserById(attemptedLogInAs);
+                    if (tryingUser.checkPassword(input)) {
+                        setMenuState("Home");
+                        currentUser = tryingUser;
+                    }
+                    else {
+                        setMenuState("Login-id");
+                        System.out.println("The password that you have entered is incorrect. Please try logging in again.");
+                    }
+                    break;
             }
 
 
@@ -186,7 +211,8 @@ public class Menu {
 //            It goes case by case on the user input and then makes changes to the system depending on the current menu state.
                 case "1":
                     if (this.menuState.equals("Home")) {
-                        setMenuState("Home");
+                        setMenuState("Login-id");
+                        currentUser = null;
                     } else if (this.menuState.equals("Booklist")) {
                         setMenuState("Home");
                     } else if (this.menuState.equals("CheckoutBook")) {
@@ -295,16 +321,17 @@ public class Menu {
      * @param menuOptions the pre-calculated options that the user can choose from.
      */
     private void printMenu(Hashtable<String, String> menuOptions) {
-//        System.out.println("_ _ _ _ _ _ _ _ _ _ _ _ _ ");
+        if (menuState.equals("Login-password")) {
+            System.out.println("Hello " + library.findUserById(attemptedLogInAs).getName());
+        }
+        System.out.println("_ _ _ _ _ _ _ _ _ _ _ _ _ ");
         System.out.println("Biblioteca Menu -> " + menuState);
         ArrayList<String> keys = new ArrayList<String>(menuOptions.keySet());
         Collections.sort(keys);
         for(String key: keys){
             System.out.println(key+". "+menuOptions.get(key));
         }
-//        System.out.println("__________________________");
-//        System.out.println("_ _ _ _ _ _ _ _ _ _ _ _ _ ");
-//        System.out.println("__________________________");
+        System.out.println("__________________________");
     }
 
     /**
@@ -336,7 +363,7 @@ public class Menu {
     public String checkInput(String input, ArrayList<String> validOptions) {
         Scanner in = new Scanner(System.in);
         boolean validInput;
-        if (menuState.equals("Login-id")) {
+        if (menuState.equals("Login-id") || menuState.equals("Login-password")) {
             validInput = true;
         } else { validInput = false;}
 
